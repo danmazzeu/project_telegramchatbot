@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const menuOptions = require('./menuOptions');
+const config = require('./config');
 
 const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU'; // TOKEN
 const bot = new TelegramBot(token, { polling: true });
@@ -18,7 +18,7 @@ app.listen(port, () => {
 // Função para enviar o menu inicial
 const sendMenu = (chatId) => {
     let optionsMessage = 'Escolha uma opção digitando o número correspondente:\n\n';
-    menuOptions.forEach(item => {
+    config.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
     bot.sendMessage(chatId, optionsMessage);
@@ -53,7 +53,7 @@ bot.onText(/^(\d)$/, (msg, match) => { // Captura apenas números de 1 dígito
         return;
     }
 
-    const selectedOption = menuOptions.find(item => item.option === option);
+    const selectedOption = config.find(item => item.option === option);
 
     if (selectedOption) {
         if (!isValidType(selectedOption.type)) {
