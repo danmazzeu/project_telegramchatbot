@@ -1,50 +1,56 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 
-// Substitua 'SEU_TOKEN_AQUI' pelo token gerado pelo BotFather
 const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
-
-// Criar um aplicativo Express
 const app = express();
+const port = 3000;
 
-// Porta em que o servidor vai rodar
-const port = 3000;  // Substitua com a porta que deseja usar
-
-// Endpoint simples para testar o servidor
 app.get('/', (req, res) => {
-  res.send('Bot de Telegram está rodando!');
+    res.send('Bot running!');
 });
 
-// Iniciar o servidor Express
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+    console.log(`Server running on port: ${port}`);
 });
 
-// Resposta inicial quando o bot for iniciado
 bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Olá! Eu sou um bot. Como posso te ajudar hoje?');
-  bot.sendMessage(chatId, 'Escolha uma opção digitando o número correspondente:\n1. Opção 1\n2. Opção 2\n3. Opção 3');
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
+    const optionsMessage = `Escolha uma opção digitando o número correspondente:
+[1] Suporte Franquia
+[2] Migração Franquia
+[3] Duduzinho fofinho
+[4] Carol dos docinhos
+[5] Falar com suporte
+`;
+
+    bot.sendMessage(chatId, optionsMessage);
 });
 
-// O bot vai responder de acordo com a escolha do usuário
-bot.onText(/(1|2|3)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const opcaoEscolhida = match[0];
 
-  switch (opcaoEscolhida) {
-    case '1':
-      bot.sendMessage(chatId, 'Você escolheu a Opção 1!');
-      break;
-    case '2':
-      bot.sendMessage(chatId, 'Você escolheu a Opção 2!');
-      break;
-    case '3':
-      bot.sendMessage(chatId, 'Você escolheu a Opção 3!');
-      break;
-    default:
-      bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
-      break;
-  }
+bot.onText(/(1|2|3)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const option = match[0];
+
+    switch (option) {
+        case '1':
+            bot.sendMessage(chatId, 'Você escolheu a Opção 1!');
+            break;
+        case '2':
+            bot.sendMessage(chatId, 'Você escolheu a Opção 2!');
+            break;
+        case '3':
+            bot.sendMessage(chatId, 'Você escolheu a Opção 3!');
+            break;
+        case '4':
+            bot.sendMessage(chatId, 'Você escolheu a Opção 4!');
+            break;
+        case '5':
+            bot.sendMessage(chatId, 'Você escolheu a Opção 5!');
+            break;
+        default:
+            bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
+            break;
+    }
 });
