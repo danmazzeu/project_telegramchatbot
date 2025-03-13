@@ -25,9 +25,9 @@ function showSubMenu(chatId, parentOption) {
     if (selectedOption && selectedOption.subOptions.length > 0) {
         let subMenuText = `${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
-            subMenuText += `${sub.option} - ${sub.text}\n`;
+            subMenuText += `[${sub.option}] - ${sub.text}\n`;
         });
-        subMenuText += `\n0 - Voltar ao menu principal`;
+        subMenuText += `\n[0] - Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText);
         userState[chatId] = { menu: 'submenu', parent: parentOption };
