@@ -16,7 +16,7 @@ function escapeMarkdownV2(text) {
 function showMenu(chatId) {
     let menuText = '*Escolha uma opção:*\n\n';
     menuOptions.forEach(option => {
-        menuText += `*\\[ ${option.option}\\ ]* ${escapeMarkdownV2(option.text)}\n`;
+        menuText += `*\\[ ${option.option} \\]* ${escapeMarkdownV2(option.text)}\n`;
     });
     bot.sendMessage(chatId, menuText, { parse_mode: 'MarkdownV2' });
     userState[chatId] = { menu: 'main', parent: null };
@@ -28,7 +28,7 @@ function showSubMenu(chatId, parentOption) {
     if (selectedOption && selectedOption.subOptions?.length > 0) {
         let subMenuText = `*Opção selecionada:*\n*\\[${selectedOption.option}\\]* ${escapeMarkdownV2(selectedOption.text)}\n\n*Escolha uma opção:*\n`;
         selectedOption.subOptions.forEach(sub => {
-            subMenuText += `*\\[ ${sub.option}\\ ]* ${escapeMarkdownV2(sub.text)}\n`;
+            subMenuText += `*\\[ ${sub.option} \\]* ${escapeMarkdownV2(sub.text)}\n`;
         });
         subMenuText += `\n*\\[0\\]* Voltar ao menu principal`;
 
@@ -57,7 +57,7 @@ bot.on('message', msg => {
             if (selectedOption.subOptions?.length > 0) {
                 showSubMenu(chatId, text);
             } else {
-                bot.sendMessage(chatId, `*\\[ ${selectedOption.option}\\ ]* ${escapeMarkdownV2(selectedOption.text)}`, { parse_mode: 'MarkdownV2' });
+                bot.sendMessage(chatId, `*\\[ ${selectedOption.option} \\]* ${escapeMarkdownV2(selectedOption.text)}`, { parse_mode: 'MarkdownV2' });
             }
         } else {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
@@ -72,7 +72,7 @@ bot.on('message', msg => {
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text.toString());
             if (subOption) {
-                bot.sendMessage(chatId, `*\\[ ${subOption.option}\\ ]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
+                bot.sendMessage(chatId, `*\\[ ${subOption.option} \\]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
                 showMenu(chatId);
