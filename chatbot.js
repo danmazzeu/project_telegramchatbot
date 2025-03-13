@@ -1,8 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const menuOptions = require('./menuOptions'); // Importando o array de opções do menu
+const menuOptions = require('./menuOptions');
 
-const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
+const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU'; // TOKEN
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
 const port = 3000;
@@ -45,7 +45,7 @@ bot.onText(/\/start/, (msg) => {
     sendMenu(chatId);
 });
 
-bot.onText(/^(\d+)$/, (msg, match) => { // Agora captura números de 1 dígito
+bot.onText(/^(\d+)$/, (msg, match) => {
     const chatId = msg.chat.id;
     const option = match[0];
 
@@ -56,7 +56,6 @@ bot.onText(/^(\d+)$/, (msg, match) => { // Agora captura números de 1 dígito
     const selectedOption = menuOptions.find(item => item.option === option);
 
     if (selectedOption) {
-        // Verificando se o tipo da opção é válido
         if (!isValidType(selectedOption.type)) {
             const errorMessage = `Erro: Tipo de opção inválido para a opção ${selectedOption.option} (${selectedOption.text}).`;
             console.error(errorMessage);
@@ -65,7 +64,6 @@ bot.onText(/^(\d+)$/, (msg, match) => { // Agora captura números de 1 dígito
             return;
         }
 
-        // Se a opção tiver sub-opções, enviar as sub-opções
         if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
             sendSubOptions(chatId, selectedOption.subOptions);
         } else {

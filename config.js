@@ -1,4 +1,3 @@
-// Definindo as opções de menu, com sub-opções também usando números de 1 único dígito
 const menuOptions = [
     { 
         option: '1', 
