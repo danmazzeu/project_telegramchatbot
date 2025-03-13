@@ -1,15 +1,13 @@
 module.exports = (bot, chatId, option) => {
-    const mainOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
-
     switch (option) {
         case '1':
             bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
             break;
-
+        
         case '1.1':
             bot.sendMessage(chatId, 'Para abrir uma franquia, entre em contato com nossa equipe de expansão ou visite nosso site para mais informações.');
             break;
-
+        
         case '1.2':
             bot.sendMessage(chatId, 'Para gerenciar sua franquia, acesse o portal do franqueado e consulte os materiais de apoio.');
             break;
@@ -43,7 +41,7 @@ module.exports = (bot, chatId, option) => {
             break;
 
         case '6':
-            const audioUrl = './assets/audios/test.mp3'; // URL ou caminho
+            const audioUrl = './assets/audios/test.mp3';
             bot.sendAudio(chatId, audioUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
             }).catch((err) => {
@@ -53,7 +51,7 @@ module.exports = (bot, chatId, option) => {
             break;
 
         case '7':
-            const pdfFilePath = './assets/documents/test.pdf'; // URL ou caminho
+            const pdfFilePath = './assets/documents/test.pdf';
             bot.sendDocument(chatId, pdfFilePath).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
             }).catch((err) => {
@@ -61,9 +59,9 @@ module.exports = (bot, chatId, option) => {
                 console.error(err);
             });
             break;
-
+            
         case '8':
-            const imageUrl = './assets/images/test.jpg'; // URL ou caminho
+            const imageUrl = './assets/images/test.jpg';
             bot.sendPhoto(chatId, imageUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
             }).catch((err) => {
@@ -76,6 +74,4 @@ module.exports = (bot, chatId, option) => {
             bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
             break;
     }
-
-    return mainOptions.length;
 };

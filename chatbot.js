@@ -15,7 +15,9 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
 
-const sendMenu = (chatId) => {
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
     const optionsMessage = `Escolha uma opção digitando o número correspondente:
 [1] Suporte Franquia
 [2] Migração Franquia
@@ -28,24 +30,10 @@ const sendMenu = (chatId) => {
 `;
 
     bot.sendMessage(chatId, optionsMessage);
-};
-
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
-    sendMenu(chatId);
 });
 
 bot.onText(/.*/, (msg, match) => {
     const chatId = msg.chat.id;
     const option = match[0];
-    const numOptions = handleOption(bot, chatId, option);
-
-    const validOptions = Array.from({ length: numOptions }, (_, i) => (i + 1).toString());
-    if (validOptions.includes(option)) {
-        handleOption(bot, chatId, option);
-    } else {
-        bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha uma opção válida.');
-        sendMenu(chatId);
-    }
+    handleOption(bot, chatId, option);
 });
