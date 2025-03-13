@@ -1,5 +1,3 @@
-// Tipos de mensagens aceitas =  'text', 'audio', 'document', 'image'
-
 const menuOptions = [
     { 
         option: '1', 
@@ -22,45 +20,12 @@ const menuOptions = [
             { option: '0', text: 'Voltar ao menu inicial', type: 'text' }
         ]
     },
-    { 
-        option: '3', 
-        text: 'Duduzinho fofinho', 
-        type: 'text', 
-        subOptions: [] 
-    },
-    { 
-        option: '4', 
-        text: 'Carol dos docinhos', 
-        type: 'text', 
-        subOptions: [] 
-    },
-    { 
-        option: '5', 
-        text: 'Falar com suporte', 
-        type: 'text', 
-        subOptions: [] 
-    },
-    { 
-        option: '6', 
-        text: 'Enviar áudio para o cliente', 
-        type: 'audio', 
-        fileName: 'test.mp3',
-        subOptions: [] 
-    },
-    { 
-        option: '7', 
-        text: 'Enviar documento para o cliente', 
-        type: 'document', 
-        fileName: 'test.pdf',
-        subOptions: [] 
-    },
-    { 
-        option: '8', 
-        text: 'Enviar imagem para o cliente', 
-        type: 'image', 
-        fileName: 'test.jpg',
-        subOptions: [] 
-    }
+    { option: '3', text: 'Duduzinho fofinho', type: 'text', subOptions: [] },
+    { option: '4', text: 'Carol dos docinhos', type: 'text', subOptions: [] },
+    { option: '5', text: 'Falar com suporte', type: 'text', subOptions: [] },
+    { option: '6', text: 'Enviar áudio para o cliente', type: 'audio', fileName: 'test.mp3', subOptions: [] },
+    { option: '7', text: 'Enviar documento para o cliente', type: 'document', fileName: 'test.pdf', subOptions: [] },
+    { option: '8', text: 'Enviar imagem para o cliente', type: 'image', fileName: 'test.jpg', subOptions: [] }
 ];
 
 module.exports = menuOptions;
