@@ -7,7 +7,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
 
-const userState = {}; // Armazena o estado do usuário (menu/submenu atual)
+const userState = {}; // Estado do usuário para armazenar o menu/submenu atual
 
 // Exibe o menu principal
 function showMenu(chatId) {
@@ -16,25 +16,27 @@ function showMenu(chatId) {
         menuText += `${option.option} - ${option.text}\n`;
     });
     bot.sendMessage(chatId, menuText);
-    userState[chatId] = 'main'; // Define que o usuário está no menu principal
+    userState[chatId] = { menu: 'main', parent: null }; // Define que o usuário está no menu principal
 }
 
-// Exibe o submenu
-function showSubMenu(chatId, option) {
-    const selectedOption = menuOptions.find(item => item.option === option);
+// Exibe um submenu
+function showSubMenu(chatId, parentOption) {
+    const selectedOption = menuOptions.find(item => item.option === parentOption);
     if (selectedOption && selectedOption.subOptions.length > 0) {
         let subMenuText = `${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `${sub.option} - ${sub.text}\n`;
         });
+        subMenuText += `\n0 - Voltar ao menu principal`;
+
         bot.sendMessage(chatId, subMenuText);
-        userState[chatId] = option; // Define que o usuário está dentro deste submenu
+        userState[chatId] = { menu: 'submenu', parent: parentOption }; // Define que o usuário está nesse submenu
     } else {
         bot.sendMessage(chatId, 'Opção inválida ou sem subopções.');
     }
 }
 
-// Manipula as mensagens recebidas
+// Manipula mensagens recebidas
 bot.on('message', msg => {
     const chatId = msg.chat.id;
     const text = msg.text.trim();
@@ -44,9 +46,9 @@ bot.on('message', msg => {
         return;
     }
 
-    const currentState = userState[chatId] || 'main';
+    const currentState = userState[chatId] || { menu: 'main', parent: null };
 
-    if (currentState === 'main') {
+    if (currentState.menu === 'main') {
         // Usuário está no menu principal
         const selectedOption = menuOptions.find(item => item.option === text);
         if (selectedOption) {
@@ -59,9 +61,9 @@ bot.on('message', msg => {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
             showMenu(chatId);
         }
-    } else {
-        // Usuário está em um submenu
-        const parentOption = menuOptions.find(item => item.option === currentState);
+    } else if (currentState.menu === 'submenu') {
+        // Usuário está dentro de um submenu
+        const parentOption = menuOptions.find(item => item.option === currentState.parent);
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text);
             if (subOption) {
@@ -72,7 +74,7 @@ bot.on('message', msg => {
                 }
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
-                showSubMenu(chatId, currentState);
+                showSubMenu(chatId, currentState.parent);
             }
         } else {
             showMenu(chatId);
