@@ -1,11 +1,16 @@
+require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const menuOptions = require('./config'); // Importa o array de opções
 const fs = require('fs');
+const menuOptions = require('./config');
 
-const token = 'AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
+const token = process.env.TELEGRAM_BOT_TOKEN;
+if (!token) {
+    console.error('Erro: TELEGRAM_BOT_TOKEN não definido no arquivo .env');
+    process.exit(1);
+}
+
 const bot = new TelegramBot(token, { polling: true });
-
 const app = express();
 const PORT = 3000;
 
@@ -17,7 +22,7 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-// Função para exibir o menu principal
+// Exibir menu principal
 function showMenu(chatId) {
     let menuText = 'Escolha uma opção:\n';
     menuOptions.forEach(option => {
@@ -26,7 +31,7 @@ function showMenu(chatId) {
     bot.sendMessage(chatId, menuText);
 }
 
-// Função para exibir submenus
+// Exibir submenus
 function showSubMenu(chatId, option) {
     const selectedOption = menuOptions.find(item => item.option === option);
     if (selectedOption && selectedOption.subOptions.length > 0) {
@@ -40,46 +45,45 @@ function showSubMenu(chatId, option) {
     }
 }
 
-// Manipula as mensagens recebidas
+// Manipulação de mensagens
 bot.on('message', msg => {
     const chatId = msg.chat.id;
     const text = msg.text;
     
     if (text === '/start') {
         showMenu(chatId);
+        return;
+    }
+    
+    const selectedOption = menuOptions.find(item => item.option === text);
+    if (!selectedOption) {
+        bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
+        showMenu(chatId);
+        return;
+    }
+    
+    if (selectedOption.type === 'text') {
+        bot.sendMessage(chatId, selectedOption.text);
+        if (selectedOption.subOptions.length > 0) {
+            showSubMenu(chatId, text);
+        }
     } else {
-        const selectedOption = menuOptions.find(item => item.option === text);
-        if (selectedOption) {
-            if (selectedOption.type === 'text') {
-                bot.sendMessage(chatId, selectedOption.text);
-                if (selectedOption.subOptions.length > 0) {
-                    showSubMenu(chatId, text);
-                }
-            } else if (['audio', 'document', 'image'].includes(selectedOption.type)) {
-                let filePath = '';
-                if (selectedOption.type === 'audio') {
-                    filePath = `./assets/audios/${selectedOption.fileName}`;
-                } else if (selectedOption.type === 'document') {
-                    filePath = `./assets/documents/${selectedOption.fileName}`;
-                } else if (selectedOption.type === 'image') {
-                    filePath = `./assets/images/${selectedOption.fileName}`;
-                }
-                
-                if (fs.existsSync(filePath)) {
-                    if (selectedOption.type === 'audio') {
-                        bot.sendAudio(chatId, filePath);
-                    } else if (selectedOption.type === 'document') {
-                        bot.sendDocument(chatId, filePath);
-                    } else if (selectedOption.type === 'image') {
-                        bot.sendPhoto(chatId, filePath);
-                    }
-                } else {
-                    bot.sendMessage(chatId, 'Arquivo não encontrado.');
-                }
-            }
+        const filePaths = {
+            audio: `./assets/audios/${selectedOption.fileName}`,
+            document: `./assets/documents/${selectedOption.fileName}`,
+            image: `./assets/images/${selectedOption.fileName}`
+        };
+        
+        const filePath = filePaths[selectedOption.type];
+        if (fs.existsSync(filePath)) {
+            const sendFile = {
+                audio: () => bot.sendAudio(chatId, filePath),
+                document: () => bot.sendDocument(chatId, filePath),
+                image: () => bot.sendPhoto(chatId, filePath)
+            };
+            sendFile[selectedOption.type]();
         } else {
-            bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
-            showMenu(chatId);
+            bot.sendMessage(chatId, 'Arquivo não encontrado.');
         }
     }
 });
