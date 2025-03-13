@@ -43,7 +43,7 @@ module.exports = (bot, chatId, option) => {
             break;
 
         case '6':
-            const audioUrl = './assets/audios/test.mp3';
+            const audioUrl = './assets/audios/test.mp3'; // URL ou caminho
             bot.sendAudio(chatId, audioUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
             }).catch((err) => {
@@ -53,7 +53,7 @@ module.exports = (bot, chatId, option) => {
             break;
 
         case '7':
-            const pdfFilePath = './assets/documents/test.pdf';
+            const pdfFilePath = './assets/documents/test.pdf'; // URL ou caminho
             bot.sendDocument(chatId, pdfFilePath).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
             }).catch((err) => {
@@ -63,7 +63,7 @@ module.exports = (bot, chatId, option) => {
             break;
 
         case '8':
-            const imageUrl = './assets/images/test.jpg';
+            const imageUrl = './assets/images/test.jpg'; // URL ou caminho
             bot.sendPhoto(chatId, imageUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
             }).catch((err) => {
