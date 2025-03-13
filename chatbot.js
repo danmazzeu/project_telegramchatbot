@@ -113,7 +113,6 @@ bot.onText(/.*/, (msg, match) => {
 
         default:
             bot.sendMessage(chatId, 'Opção inválida.');
-            sendMenu(chatId);
             break;
     }
 });
