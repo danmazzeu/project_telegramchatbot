@@ -105,12 +105,15 @@ function sendFile(chatId, fileName, type, directory) {
     if (fs.existsSync(filePath)) {
         switch (type) {
             case 'audio':
+                bot.sendMessage(chatId, 'Enviando audio...');
                 bot.sendAudio(chatId, filePath);
                 break;
             case 'document':
+                bot.sendMessage(chatId, 'Enviando documento...');
                 bot.sendDocument(chatId, filePath);
                 break;
             case 'photo':
+                bot.sendMessage(chatId, 'Enviando imagem...');
                 bot.sendPhoto(chatId, filePath);
                 break;
         }
