@@ -1,13 +1,15 @@
 module.exports = (bot, chatId, option) => {
+    const mainOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
+
     switch (option) {
         case '1':
             bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
             break;
-        
+
         case '1.1':
             bot.sendMessage(chatId, 'Para abrir uma franquia, entre em contato com nossa equipe de expansão ou visite nosso site para mais informações.');
             break;
-        
+
         case '1.2':
             bot.sendMessage(chatId, 'Para gerenciar sua franquia, acesse o portal do franqueado e consulte os materiais de apoio.');
             break;
@@ -59,7 +61,7 @@ module.exports = (bot, chatId, option) => {
                 console.error(err);
             });
             break;
-            
+
         case '8':
             const imageUrl = './assets/images/test.jpg';
             bot.sendPhoto(chatId, imageUrl).then(() => {
@@ -74,4 +76,6 @@ module.exports = (bot, chatId, option) => {
             bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
             break;
     }
+
+    return mainOptions.length;
 };
