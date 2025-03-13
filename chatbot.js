@@ -75,7 +75,7 @@ bot.onText(/.*/, (msg, match) => {
             break;
 
         case '6': // Exemplo enviando audio
-            const audioUrl = './assets/audios/test.mp3';
+            const audioUrl = './assets/audios/test.mp3'; // Caminho ou URL
             bot.sendAudio(chatId, audioUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
             }).catch((err) => {
@@ -85,7 +85,7 @@ bot.onText(/.*/, (msg, match) => {
             break;
 
         case '7': // Exemplo enviando documento PDF
-            const pdfFilePath = "./assets/documents/test.pdf";
+            const pdfFilePath = "./assets/documents/test.pdf"; // Caminho ou URL
             bot.sendDocument(chatId, pdfFilePath).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
             }).catch((err) => {
@@ -95,7 +95,7 @@ bot.onText(/.*/, (msg, match) => {
             break;
             
         case '8': // Exemplo enviando imagem
-            const imageUrl = './assets/images/test.jpg';
+            const imageUrl = './assets/images/test.jpg'; // Caminho ou URL
             bot.sendPhoto(chatId, imageUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
             }).catch((err) => {
