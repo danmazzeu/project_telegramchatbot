@@ -9,15 +9,16 @@ console.log('Bot iniciado e aguardando mensagens...');
 
 const userState = {};
 
+// Função para escapar caracteres especiais no MarkdownV2
 function escapeMarkdownV2(text) {
-    return text.replace(/[(_*()~`>#+=|{}.!)]/g, '\\$1');
+    return text.replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, '\\$1'); // Escapa todos os caracteres exceto números dentro de []
 }
 
 // Exibe o menu principal
 function showMenu(chatId) {
     let menuText = '*Escolha uma opção:*\n\n';
     menuOptions.forEach(option => {
-        menuText += `*${option.option}* - ${escapeMarkdownV2(option.text)}\n`;
+        menuText += `*\\[${option.option}\\]* ${escapeMarkdownV2(option.text)}\n`;
     });
     bot.sendMessage(chatId, menuText, { parse_mode: 'MarkdownV2' });
     userState[chatId] = { menu: 'main', parent: null };
@@ -27,11 +28,11 @@ function showMenu(chatId) {
 function showSubMenu(chatId, parentOption) {
     const selectedOption = menuOptions.find(item => item.option === parentOption);
     if (selectedOption && selectedOption.subOptions?.length > 0) {
-        let subMenuText = `*Opção selecionada:*\n*[${selectedOption.option}]* ${escapeMarkdownV2(selectedOption.text)}\n\n*Escolha uma opção:*\n`;
+        let subMenuText = `*Opção selecionada:*\n*\\[${selectedOption.option}\\]* ${escapeMarkdownV2(selectedOption.text)}\n\n*Escolha uma opção:*\n`;
         selectedOption.subOptions.forEach(sub => {
-            subMenuText += `*[${sub.option}]* ${escapeMarkdownV2(sub.text)}\n`;
+            subMenuText += `*\\[${sub.option}\\]* ${escapeMarkdownV2(sub.text)}\n`;
         });
-        subMenuText += `*0* - Voltar ao menu principal`;
+        subMenuText += `\n*\\[0\\]* Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText, { parse_mode: 'MarkdownV2' });
         userState[chatId] = { menu: 'submenu', parent: parentOption };
@@ -58,7 +59,7 @@ bot.on('message', msg => {
             if (selectedOption.subOptions?.length > 0) {
                 showSubMenu(chatId, text);
             } else {
-                bot.sendMessage(chatId, `*[${selectedOption.option}]* ${escapeMarkdownV2(selectedOption.text)}`, { parse_mode: 'MarkdownV2' });
+                bot.sendMessage(chatId, `*\\[${selectedOption.option}\\]* ${escapeMarkdownV2(selectedOption.text)}`, { parse_mode: 'MarkdownV2' });
             }
         } else {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
@@ -73,7 +74,7 @@ bot.on('message', msg => {
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text.toString());
             if (subOption) {
-                bot.sendMessage(chatId, `*[${subOption.option}]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
+                bot.sendMessage(chatId, `*\\[${subOption.option}\\]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
                 showMenu(chatId);
