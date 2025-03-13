@@ -1,10 +1,50 @@
-module.exports = (bot, chatId, option) => {
+const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
+
+const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
+const bot = new TelegramBot(token, { polling: true });
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot running!');
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port: ${port}`);
+});
+
+// Função para enviar o menu
+const sendMenu = (chatId) => {
+    const optionsMessage = `Escolha uma opção digitando o número correspondente:
+[1] Suporte Franquia
+[2] Migração Franquia
+[3] Duduzinho fofinho
+[4] Carol dos docinhos
+[5] Falar com suporte
+[6] Enviar áudio para o cliente
+[7] Enviar documento para o cliente
+[8] Enviar imagem para o cliente
+`;
+    bot.sendMessage(chatId, optionsMessage);
+};
+
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
+    sendMenu(chatId); // Chama a função para enviar o menu
+});
+
+bot.onText(/.*/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const option = match[0];
+
     switch (option) {
-        case '1':
+        case '1': // Exemplo enviando texto simples
             bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
             break;
         
-        case '1.1':
+        case '1.1': // Exemplo sub opções
             bot.sendMessage(chatId, 'Para abrir uma franquia, entre em contato com nossa equipe de expansão ou visite nosso site para mais informações.');
             break;
         
@@ -40,8 +80,8 @@ module.exports = (bot, chatId, option) => {
             bot.sendMessage(chatId, 'Você escolheu "Falar com suporte". Um atendente entrará em contato com você em breve.');
             break;
 
-        case '6':
-            const audioUrl = './assets/audios/test.mp3';
+        case '6': // Exemplo enviando audio
+            const audioUrl = './assets/audios/test.mp3'; // Caminho ou URL
             bot.sendAudio(chatId, audioUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
             }).catch((err) => {
@@ -50,8 +90,8 @@ module.exports = (bot, chatId, option) => {
             });
             break;
 
-        case '7':
-            const pdfFilePath = './assets/documents/test.pdf';
+        case '7': // Exemplo enviando documento PDF
+            const pdfFilePath = "./assets/documents/test.pdf"; // Caminho ou URL
             bot.sendDocument(chatId, pdfFilePath).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
             }).catch((err) => {
@@ -60,8 +100,8 @@ module.exports = (bot, chatId, option) => {
             });
             break;
             
-        case '8':
-            const imageUrl = './assets/images/test.jpg';
+        case '8': // Exemplo enviando imagem
+            const imageUrl = './assets/images/test.jpg'; // Caminho ou URL
             bot.sendPhoto(chatId, imageUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
             }).catch((err) => {
@@ -72,6 +112,7 @@ module.exports = (bot, chatId, option) => {
 
         default:
             bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
+            sendMenu(chatId);  // Chama a função para enviar o menu novamente
             break;
     }
-};
+});
