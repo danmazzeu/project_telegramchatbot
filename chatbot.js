@@ -2,14 +2,13 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const menuOptions = require('./config');
 
-const token = 'AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
+const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
 
 const userState = {};
 
-// Função para escapar caracteres especiais no MarkdownV2 do Telegram
 function escapeMarkdownV2(text) {
     return text.replace(/([_*[\]()~`>#+-=|{}.!])/g, '\\$1');
 }
