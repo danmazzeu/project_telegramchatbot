@@ -47,7 +47,7 @@ bot.onText(/\/start/, (msg) => {
 
 bot.onText(/^(\d)$/, (msg, match) => {
     const chatId = msg.chat.id;
-    const option = match[1];
+    const option = match[1]; // Usar match[1] para pegar a opção correta
 
     if (msg.text === '/start') {
         return;
