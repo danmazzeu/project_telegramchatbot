@@ -14,7 +14,7 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
 
-// Função para enviar o menu
+// Menu inicial
 const sendMenu = (chatId) => {
     const optionsMessage = `Escolha uma opção digitando o número correspondente:
 [1] Suporte Franquia
@@ -32,7 +32,7 @@ const sendMenu = (chatId) => {
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
-    sendMenu(chatId); // Chama a função para enviar o menu
+    sendMenu(chatId);
 });
 
 bot.onText(/.*/, (msg, match) => {
@@ -112,7 +112,7 @@ bot.onText(/.*/, (msg, match) => {
 
         default:
             bot.sendMessage(chatId, 'Opção inválida. Por favor, escolha um número válido.');
-            sendMenu(chatId);  // Chama a função para enviar o menu novamente
+            sendMenu(chatId);
             break;
     }
 });
