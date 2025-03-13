@@ -72,6 +72,7 @@ bot.on('message', msg => {
                 bot.sendMessage(chatId, `[${subOption.option}] ${subOption.text}`);
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
+                showMenu(chatId);
             }
         } else {
             showMenu(chatId);
