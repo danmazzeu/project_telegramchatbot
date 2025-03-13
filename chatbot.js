@@ -23,7 +23,9 @@ bot.onText(/\/start/, (msg) => {
 [3] Duduzinho fofinho
 [4] Carol dos docinhos
 [5] Falar com suporte
-[6] Enviar áudio
+[6] Enviar áudio para o cliente
+[7] Enviar documento para o cliente
+[8] Enviar imagem para o cliente
 `;
 
     bot.sendMessage(chatId, optionsMessage);
