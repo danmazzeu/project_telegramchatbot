@@ -10,14 +10,14 @@ console.log('Bot iniciado e aguardando mensagens...');
 const userState = {};
 
 function escapeMarkdownV2(text) {
-    return text.replace(/(_*()~`>#+=|{}.!)/g, '\\$1');
+    return text.replace(/[(_*()~`>#+=|{}.!)]/g, '\\$1');
 }
 
 // Exibe o menu principal
 function showMenu(chatId) {
     let menuText = '*Escolha uma opção:*\n\n';
     menuOptions.forEach(option => {
-        menuText += `*[${option.option}]* ${escapeMarkdownV2(option.text)}\n`;
+        menuText += `*${option.option}* - ${escapeMarkdownV2(option.text)}\n`;
     });
     bot.sendMessage(chatId, menuText, { parse_mode: 'MarkdownV2' });
     userState[chatId] = { menu: 'main', parent: null };
@@ -31,7 +31,7 @@ function showSubMenu(chatId, parentOption) {
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `*[${sub.option}]* ${escapeMarkdownV2(sub.text)}\n`;
         });
-        subMenuText += `*[0]* Voltar ao menu principal`;
+        subMenuText += `*0* - Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText, { parse_mode: 'MarkdownV2' });
         userState[chatId] = { menu: 'submenu', parent: parentOption };
