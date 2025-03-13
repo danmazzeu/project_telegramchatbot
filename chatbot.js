@@ -13,7 +13,7 @@ const userState = {};
 function showMenu(chatId) {
     let menuText = 'Escolha uma opção:\n\n';
     menuOptions.forEach(option => {
-        menuText += `${option.option} - ${option.text}\n`;
+        menuText += `[${option.option}] - ${option.text}\n`;
     });
     bot.sendMessage(chatId, menuText);
     userState[chatId] = { menu: 'main', parent: null };
@@ -49,7 +49,6 @@ bot.on('message', msg => {
     const currentState = userState[chatId] || { menu: 'main', parent: null };
 
     if (currentState.menu === 'main') {
-        // Usuário está no menu principal
         const selectedOption = menuOptions.find(item => item.option === text);
         if (selectedOption) {
             if (selectedOption.subOptions.length > 0) {
@@ -62,13 +61,12 @@ bot.on('message', msg => {
             showMenu(chatId);
         }
     } else if (currentState.menu === 'submenu') {
-        // Usuário está dentro de um submenu
         const parentOption = menuOptions.find(item => item.option === currentState.parent);
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text);
             if (subOption) {
                 if (subOption.option === '0') {
-                    showMenu(chatId); // Voltar ao menu principal
+                    showMenu(chatId);
                 } else {
                     bot.sendMessage(chatId, subOption.text);
                 }
