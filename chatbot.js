@@ -21,7 +21,6 @@ const sendMenu = (chatId) => {
     menuOptions.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
-    optionsMessage += '[0] Voltar ao menu inicial';
     bot.sendMessage(chatId, optionsMessage);
 };
 
@@ -31,7 +30,7 @@ const sendSubOptions = (chatId, subOptions, parentOption) => {
     subOptions.forEach(subItem => {
         subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
     });
-    subOptionsMessage += '[0] Voltar ao menu anterior';
+    subOptionsMessage += '[0] Voltar ao menu anterior'; // A opção "Voltar ao menu anterior" será mostrada apenas no submenu
     bot.sendMessage(chatId, subOptionsMessage);
 
     // Armazenando a opção do menu anterior
@@ -48,7 +47,7 @@ const isValidType = (type) => {
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
-    sendMenu(chatId);
+    sendMenu(chatId); // Exibe o menu principal
 });
 
 bot.onText(/^(\d)$/, (msg, match) => {
