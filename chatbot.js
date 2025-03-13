@@ -94,7 +94,7 @@ bot.onText(/.*/, (msg, match) => {
             });
             break;
             
-        case '1': // Exemplo enviando imagem
+        case '8': // Exemplo enviando imagem
             const imageUrl = './assets/images/test.jpg';
             bot.sendPhoto(chatId, imageUrl).then(() => {
                 bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
