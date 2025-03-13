@@ -11,7 +11,7 @@ const userState = {};
 
 // Exibe o menu principal
 function showMenu(chatId) {
-    let menuText = 'Escolha uma opção:\n\n';
+    let menuText = '*Escolha uma opção:*\n\n';
     menuOptions.forEach(option => {
         menuText += `[${option.option}] ${option.text}\n`;
     });
@@ -23,7 +23,7 @@ function showMenu(chatId) {
 function showSubMenu(chatId, parentOption) {
     const selectedOption = menuOptions.find(item => item.option === parentOption);
     if (selectedOption && selectedOption.subOptions?.length > 0) {
-        let subMenuText = `Opção selecionada:\n[${selectedOption.option}] ${selectedOption.text}\n\nEscolha uma opção:\n`;
+        let subMenuText = `*Opção selecionada:*\n[${selectedOption.option}] ${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `[${sub.option}] ${sub.text}\n`;
         });
