@@ -1,8 +1,10 @@
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const path = require('path');
+
 const { menuOptions } = require('./menuOptions');
 const { token } = require('./token');
+
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
