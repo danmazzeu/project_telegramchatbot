@@ -25,17 +25,12 @@ const sendMenu = (chatId) => {
 };
 
 // Função para enviar sub-opções
-const sendSubOptions = (chatId, subOptions, parentOption) => {
+const sendSubOptions = (chatId, subOptions) => {
     let subOptionsMessage = 'Escolha uma sub-opção digitando o número correspondente:\n\n';
     subOptions.forEach(subItem => {
         subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
     });
-    subOptionsMessage += '[0] Voltar ao menu anterior';  // Adicionando a opção de voltar ao menu anterior
     bot.sendMessage(chatId, subOptionsMessage);
-
-    // Armazenando a opção do menu anterior
-    bot.userState = bot.userState || {};
-    bot.userState[chatId] = { parentOption };
 };
 
 // Função para validar o tipo de opção
@@ -58,11 +53,6 @@ bot.onText(/^(\d)$/, (msg, match) => {
         return;
     }
 
-    if (option === '0') {  // Se a opção for "Voltar ao menu inicial"
-        sendMenu(chatId);  // Envia o menu inicial
-        return;
-    }
-
     const selectedOption = config.find(item => item.option === option);
 
     if (selectedOption) {
@@ -75,7 +65,7 @@ bot.onText(/^(\d)$/, (msg, match) => {
         }
 
         if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
-            sendSubOptions(chatId, selectedOption.subOptions, option);
+            sendSubOptions(chatId, selectedOption.subOptions);
         } else {
             switch (selectedOption.type) {
                 case 'text': // Enviar texto
@@ -130,22 +120,3 @@ bot.onText(/^(\d)$/, (msg, match) => {
         sendMenu(chatId);
     }
 });
-
-bot.onText(/^0$/, (msg) => {
-    const chatId = msg.chat.id;
-
-    if (bot.userState && bot.userState[chatId] && bot.userState[chatId].parentOption) {
-        const parentOption = bot.userState[chatId].parentOption;
-        const selectedOption = config.find(item => item.option === parentOption);
-
-        if (selectedOption && selectedOption.subOptions) {
-            sendSubOptions(chatId, selectedOption.subOptions, parentOption);
-        } else {
-            sendMenu(chatId);
-        }
-    } else {
-        // Se não houver histórico salvo, volta para o menu inicial
-        sendMenu(chatId);
-    }
-});
-
