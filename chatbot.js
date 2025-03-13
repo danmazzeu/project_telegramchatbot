@@ -13,7 +13,7 @@ const userState = {};
 function showMenu(chatId) {
     let menuText = 'Escolha uma opção:\n\n';
     menuOptions.forEach(option => {
-        menuText += `[${option.option}] - ${option.text}\n`;
+        menuText += `[${option.option}] ${option.text}\n`;
     });
     bot.sendMessage(chatId, menuText);
     userState[chatId] = { menu: 'main', parent: null };
@@ -25,7 +25,7 @@ function showSubMenu(chatId, parentOption) {
     if (selectedOption && selectedOption.subOptions.length > 0) {
         let subMenuText = `[${selectedOption.option}] ${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
-            subMenuText += `[${sub.option}] - ${sub.text}\n`;
+            subMenuText += `[${sub.option}] ${sub.text}\n`;
         });
         subMenuText += `\n[0] - Voltar ao menu principal`;
 
