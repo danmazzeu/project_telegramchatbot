@@ -16,7 +16,7 @@ function escapeMarkdownV2(text) {
 }
 
 function showMenu(chatId) {
-    let menuText = '*Escolha uma opção:*\n\n';
+    let menuText = '*Escolha uma opção:*\n';
     menuOptions.forEach(option => {
         menuText += `*\\[ ${option.option} \\]* ${escapeMarkdownV2(option.text)}\n`;
     });
