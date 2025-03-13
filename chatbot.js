@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
+const path = require('path');
 const menuOptions = require('./config');
 const { token } = require('./token');
 const bot = new TelegramBot(token, { polling: true });
@@ -12,7 +13,6 @@ function escapeMarkdownV2(text) {
     return text.replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
 }
 
-// Exibe o menu principal
 function showMenu(chatId) {
     let menuText = '*Escolha uma opção:*\n\n';
     menuOptions.forEach(option => {
@@ -22,7 +22,6 @@ function showMenu(chatId) {
     userState[chatId] = { menu: 'main', parent: null };
 }
 
-// Exibe um submenu
 function showSubMenu(chatId, parentOption) {
     const selectedOption = menuOptions.find(item => item.option === parentOption);
     if (selectedOption && selectedOption.subOptions?.length > 0) {
@@ -30,7 +29,7 @@ function showSubMenu(chatId, parentOption) {
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `*\\[ ${sub.option} \\]* ${escapeMarkdownV2(sub.text)}\n`;
         });
-        subMenuText += `*\\[0\\]* Voltar ao menu principal`;
+        subMenuText += `*\\[ 0 \\]* Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText, { parse_mode: 'MarkdownV2' });
         userState[chatId] = { menu: 'submenu', parent: parentOption };
@@ -39,7 +38,6 @@ function showSubMenu(chatId, parentOption) {
     }
 }
 
-// Manipula mensagens recebidas
 bot.on('message', msg => {
     const chatId = msg.chat.id;
     const text = msg.text.trim();
@@ -57,7 +55,7 @@ bot.on('message', msg => {
             if (selectedOption.subOptions?.length > 0) {
                 showSubMenu(chatId, text);
             } else {
-                bot.sendMessage(chatId, `*\\[ ${selectedOption.option} \\]* ${escapeMarkdownV2(selectedOption.text)}`, { parse_mode: 'MarkdownV2' });
+                handleOptionSelection(chatId, selectedOption);
             }
         } else {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
@@ -72,7 +70,7 @@ bot.on('message', msg => {
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text.toString());
             if (subOption) {
-                bot.sendMessage(chatId, `*\\[ ${subOption.option} \\]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
+                handleOptionSelection(chatId, subOption);
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
                 showMenu(chatId);
@@ -82,3 +80,41 @@ bot.on('message', msg => {
         }
     }
 });
+
+function handleOptionSelection(chatId, option) {
+    switch (option.type) {
+        case 'text':
+            bot.sendMessage(chatId, `*\\[ ${option.option} \\]* ${escapeMarkdownV2(option.text)}`, { parse_mode: 'MarkdownV2' });
+            break;
+        case 'audio':
+            sendFile(chatId, option.fileName, 'audio', './assets/audios/');
+            break;
+        case 'document':
+            sendFile(chatId, option.fileName, 'document', './assets/documents/');
+            break;
+        case 'image':
+            sendFile(chatId, option.fileName, 'photo', './assets/images/');
+            break;
+        default:
+            bot.sendMessage(chatId, 'Opção não reconhecida.');
+    }
+}
+
+function sendFile(chatId, fileName, type, directory) {
+    const filePath = path.join(directory, fileName);
+    if (fs.existsSync(filePath)) {
+        switch (type) {
+            case 'audio':
+                bot.sendAudio(chatId, filePath);
+                break;
+            case 'document':
+                bot.sendDocument(chatId, filePath);
+                break;
+            case 'photo':
+                bot.sendPhoto(chatId, filePath);
+                break;
+        }
+    } else {
+        bot.sendMessage(chatId, 'Arquivo não encontrado.');
+    }
+}
