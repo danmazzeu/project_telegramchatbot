@@ -70,7 +70,6 @@ bot.on('message', msg => {
         if (parentOption) {
             const subOption = parentOption.subOptions.find(sub => sub.option === text.toString());
             if (subOption) {
-                bot.sendMessage(chatId, `*\\[ ${subOption.option} \\]* ${escapeMarkdownV2(subOption.text)}`, { parse_mode: 'MarkdownV2' });
                 handleOptionSelection(chatId, subOption);
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
@@ -85,7 +84,7 @@ bot.on('message', msg => {
 function handleOptionSelection(chatId, option) {
     switch (option.type) {
         case 'text':
-            bot.sendMessage(chatId, `*\\[ ${option.option} \\]* ${escapeMarkdownV2(option.text)}`, { parse_mode: 'MarkdownV2' });
+            bot.sendMessage(chatId, `*Opção selecionada:*\n*\\[ ${option.option} \\]* ${escapeMarkdownV2(option.text)}`, { parse_mode: 'MarkdownV2' });
             break;
         case 'audio':
             sendFile(chatId, option.fileName, 'audio', './assets/audios/');
@@ -106,7 +105,7 @@ function sendFile(chatId, fileName, type, directory) {
     if (fs.existsSync(filePath)) {
         switch (type) {
             case 'audio':
-                bot.sendMessage(chatId, 'Enviando áudio...');
+                bot.sendMessage(chatId, 'Enviando audio...');
                 bot.sendAudio(chatId, filePath);
                 break;
             case 'document':
