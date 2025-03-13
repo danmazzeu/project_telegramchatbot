@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
+const config = require('./config');
 
 const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
@@ -14,20 +15,28 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
 
-// Menu inicial
+// Função para enviar o menu inicial
 const sendMenu = (chatId) => {
-    const optionsMessage = `Escolha uma opção digitando o número correspondente:
-
-[1] Suporte Franquia
-[2] Migração Franquia
-[3] Duduzinho fofinho
-[4] Carol dos docinhos
-[5] Falar com suporte
-[6] Enviar áudio para o cliente
-[7] Enviar documento para o cliente
-[8] Enviar imagem para o cliente
-`;
+    let optionsMessage = 'Escolha uma opção digitando o número correspondente:\n\n';
+    config.forEach(item => {
+        optionsMessage += `[${item.option}] ${item.text}\n`;
+    });
     bot.sendMessage(chatId, optionsMessage);
+};
+
+// Função para enviar sub-opções
+const sendSubOptions = (chatId, subOptions) => {
+    let subOptionsMessage = 'Escolha uma sub-opção digitando o número correspondente:\n\n';
+    subOptions.forEach(subItem => {
+        subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
+    });
+    bot.sendMessage(chatId, subOptionsMessage);
+};
+
+// Função para validar o tipo de opção
+const isValidType = (type) => {
+    const validTypes = ['text', 'audio', 'document', 'image'];
+    return validTypes.includes(type);
 };
 
 bot.onText(/\/start/, (msg) => {
@@ -36,7 +45,7 @@ bot.onText(/\/start/, (msg) => {
     sendMenu(chatId);
 });
 
-bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {  // Captura números simples (1, 2, 3...) e sub-opções (1.1, 2.1)
+bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {
     const chatId = msg.chat.id;
     const option = match[0];
 
@@ -44,80 +53,70 @@ bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {  // Captura números simples (1,
         return;
     }
 
-    switch (option) {
-        case '1': // Exemplo enviando texto simples
-            bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
-            break;
-        
-        case '1.1': // Exemplo sub opções
-            bot.sendMessage(chatId, 'Para abrir uma franquia, entre em contato com nossa equipe de expansão ou visite nosso site para mais informações.');
-            break;
-        
-        case '1.2':
-            bot.sendMessage(chatId, 'Para gerenciar sua franquia, acesse o portal do franqueado e consulte os materiais de apoio.');
-            break;
+    const selectedOption = config.find(item => item.option === option);
 
-        case '1.3':
-            bot.sendMessage(chatId, 'Se você precisa de suporte técnico, envie o problema detalhado e nossa equipe irá ajudar o mais rápido possível.');
-            break;
-
-        case '2':
-            bot.sendMessage(chatId, 'Você escolheu "Migração Franquia". Escolha uma sub-opção:\n[2.1] Como migrar uma franquia\n[2.2] Suporte para migração');
-            break;
-
-        case '2.1':
-            bot.sendMessage(chatId, 'Para migrar uma franquia, você deve seguir o processo de migração descrito em nosso portal de franqueados.');
-            break;
-
-        case '2.2':
-            bot.sendMessage(chatId, 'Para obter suporte na migração da franquia, entre em contato com a nossa equipe técnica via e-mail ou telefone.');
-            break;
-
-        case '3':
-            bot.sendMessage(chatId, 'Você escolheu "Duduzinho fofinho"! Não temos sub-opções para esta opção, mas podemos conversar sobre coisas fofinhas!');
-            break;
-
-        case '4':
-            bot.sendMessage(chatId, 'Você escolheu "Carol dos docinhos"! Fique à vontade para perguntar sobre nossos deliciosos docinhos!');
-            break;
-
-        case '5':
-            bot.sendMessage(chatId, 'Você escolheu "Falar com suporte". Um atendente entrará em contato com você em breve.');
-            break;
-
-        case '6': // Exemplo enviando audio
-            const audioUrl = './assets/audios/test.mp3'; // Caminho ou URL
-            bot.sendAudio(chatId, audioUrl).then(() => {
-                bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
-            }).catch((err) => {
-                bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar o áudio.');
-                console.error(err);
-            });
-            break;
-
-        case '7': // Exemplo enviando documento PDF
-            const pdfFilePath = "./assets/documents/test.pdf"; // Caminho ou URL
-            bot.sendDocument(chatId, pdfFilePath).then(() => {
-                bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
-            }).catch((err) => {
-                bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar o documento PDF.');
-                console.error(err);
-            });
-            break;
-            
-        case '8': // Exemplo enviando imagem
-            const imageUrl = './assets/images/test.jpg'; // Caminho ou URL
-            bot.sendPhoto(chatId, imageUrl).then(() => {
-                bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
-            }).catch((err) => {
-                bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar a imagem.');
-                console.error(err);
-            });
-            break;
-
-        default:
-            bot.sendMessage(chatId, 'Opção inválida.');
+    if (selectedOption) {
+        if (!isValidType(selectedOption.type)) {
+            const errorMessage = `Erro: Tipo de opção inválido para a opção ${selectedOption.option} (${selectedOption.text}).`;
+            console.error(errorMessage);
+            bot.sendMessage(chatId, 'Erro: Tipo de opção inválido.');
             sendMenu(chatId);
-            break;
+            return;
+        }
+
+        if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
+            sendSubOptions(chatId, selectedOption.subOptions);
+        } else {
+            switch (selectedOption.type) {
+                case 'text': // Enviar texto
+                    bot.sendMessage(chatId, selectedOption.text);
+                    break;
+
+                case 'audio': // Enviar áudio
+                    const audioUrl = `./assets/audios/${selectedOption.fileName}`;
+                    bot.sendAudio(chatId, audioUrl).then(() => {
+                        bot.sendMessage(chatId, 'Aqui está o áudio solicitado!');
+                    }).catch((err) => {
+                        const errorMessage = `Erro ao enviar áudio: ${err.message}`;
+                        console.error(errorMessage);
+                        bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar o áudio.');
+                    });
+                    break;
+
+                case 'document': // Enviar documento
+                    const pdfFilePath = `./assets/documents/${selectedOption.fileName}`;
+                    bot.sendDocument(chatId, pdfFilePath).then(() => {
+                        bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
+                    }).catch((err) => {
+                        const errorMessage = `Erro ao enviar documento: ${err.message}`;
+                        console.error(errorMessage);
+                        bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar o documento PDF.');
+                    });
+                    break;
+
+                case 'image': // Enviar imagem
+                    const imageUrl = `./assets/images/${selectedOption.fileName}`;
+                    bot.sendPhoto(chatId, imageUrl).then(() => {
+                        bot.sendMessage(chatId, 'Aqui está a imagem solicitada!');
+                    }).catch((err) => {
+                        const errorMessage = `Erro ao enviar imagem: ${err.message}`;
+                        console.error(errorMessage);
+                        bot.sendMessage(chatId, 'Desculpe, ocorreu um erro ao enviar a imagem.');
+                    });
+                    break;
+
+                default:
+                    const errorMessage = `Erro: Tipo de conteúdo não reconhecido para a opção ${selectedOption.option}.`;
+                    console.error(errorMessage);
+                    bot.sendMessage(chatId, 'Erro: Tipo de conteúdo não reconhecido.');
+                    sendMenu(chatId);
+                    break;
+            }
+        }
+    } else {
+        const errorMessage = `Opção inválida escolhida: ${option}`;
+        console.error(errorMessage);
+        bot.sendMessage(chatId, 'Opção inválida.');
+        sendMenu(chatId);
     }
 });
