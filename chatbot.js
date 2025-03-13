@@ -21,7 +21,7 @@ const sendMenu = (chatId) => {
     menuOptions.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
-    optionsMessage += '[0] Voltar ao menu inicial';
+    optionsMessage += '[0] Voltar ao menu inicial';  // Adicionando a opção de voltar ao menu inicial
     bot.sendMessage(chatId, optionsMessage);
 };
 
@@ -31,7 +31,7 @@ const sendSubOptions = (chatId, subOptions, parentOption) => {
     subOptions.forEach(subItem => {
         subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
     });
-    subOptionsMessage += '[0] Voltar ao menu anterior';
+    subOptionsMessage += '[0] Voltar ao menu anterior';  // Adicionando a opção de voltar ao menu anterior
     bot.sendMessage(chatId, subOptionsMessage);
 
     // Armazenando a opção do menu anterior
@@ -143,6 +143,6 @@ bot.onText(/^0$/, (msg) => {
             sendMenu(chatId);
         }
     } else {
-        sendMenu(chatId);
+        sendMenu(chatId);  // Se não houver estado anterior, envia o menu inicial
     }
 });
