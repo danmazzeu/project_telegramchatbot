@@ -134,17 +134,18 @@ bot.onText(/^(\d)$/, (msg, match) => {
 bot.onText(/^0$/, (msg) => {
     const chatId = msg.chat.id;
 
-    if (bot.userState && bot.userState[chatId]) {
+    if (bot.userState && bot.userState[chatId] && bot.userState[chatId].parentOption) {
         const parentOption = bot.userState[chatId].parentOption;
         const selectedOption = config.find(item => item.option === parentOption);
 
-        if (selectedOption) {
+        if (selectedOption && selectedOption.subOptions) {
             sendSubOptions(chatId, selectedOption.subOptions, parentOption);
         } else {
             sendMenu(chatId);
         }
     } else {
-        // Se não houver estado salvo, garantir que volta ao menu inicial
+        // Se não houver histórico salvo, volta para o menu inicial
         sendMenu(chatId);
     }
 });
+
