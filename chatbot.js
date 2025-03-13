@@ -22,12 +22,12 @@ function showMenu(chatId) {
 // Exibe um submenu
 function showSubMenu(chatId, parentOption) {
     const selectedOption = menuOptions.find(item => item.option === parentOption);
-    if (selectedOption && selectedOption.subOptions.length > 0) {
+    if (selectedOption && selectedOption.subOptions?.length > 0) {
         let subMenuText = `[${selectedOption.option}] ${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `[${sub.option}] ${sub.text}\n`;
         });
-        subMenuText += `\n[0] - Voltar ao menu principal`;
+        subMenuText += `\n[0] Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText);
         userState[chatId] = { menu: 'submenu', parent: parentOption };
@@ -49,30 +49,29 @@ bot.on('message', msg => {
     const currentState = userState[chatId] || { menu: 'main', parent: null };
 
     if (currentState.menu === 'main') {
-        const selectedOption = menuOptions.find(item => item.option === text);
+        const selectedOption = menuOptions.find(item => item.option === text.toString());
         if (selectedOption) {
-            if (selectedOption.subOptions.length > 0) {
+            if (selectedOption.subOptions?.length > 0) {
                 showSubMenu(chatId, text);
             } else {
                 bot.sendMessage(chatId, `[${selectedOption.option}] ${selectedOption.text}`);
             }
         } else {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
-            showMenu(chatId);
         }
     } else if (currentState.menu === 'submenu') {
+        if (text === '0') {
+            showMenu(chatId);
+            return;
+        }
+
         const parentOption = menuOptions.find(item => item.option === currentState.parent);
         if (parentOption) {
-            const subOption = parentOption.subOptions.find(sub => sub.option === text);
+            const subOption = parentOption.subOptions.find(sub => sub.option === text.toString());
             if (subOption) {
-                if (subOption.option === '0') {
-                    showMenu(chatId);
-                } else {
-                    bot.sendMessage(chatId, `[${subOption.option}] ${subOption.text}`);
-                }
+                bot.sendMessage(chatId, `[${subOption.option}] ${subOption.text}`);
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
-                showSubMenu(chatId, currentState.parent);
             }
         } else {
             showMenu(chatId);
