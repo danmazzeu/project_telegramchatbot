@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 
 // Substitua 'SEU_TOKEN_AQUI' pelo token gerado pelo BotFather
-const token = 'SEU_TOKEN_AQUI';
+const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
 
 // Criar um aplicativo Express
