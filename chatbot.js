@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const menuOptions = require('./menuOptions');
+const config = require('./config');
 
 const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU'; // TOKEN
 const bot = new TelegramBot(token, { polling: true });
@@ -18,7 +18,7 @@ app.listen(port, () => {
 // Função para enviar o menu inicial
 const sendMenu = (chatId) => {
     let optionsMessage = 'Escolha uma opção digitando o número correspondente:\n\n';
-    menuOptions.forEach(item => {
+    config.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
     bot.sendMessage(chatId, optionsMessage);
@@ -30,7 +30,7 @@ const sendSubOptions = (chatId, subOptions, parentOption) => {
     subOptions.forEach(subItem => {
         subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
     });
-    subOptionsMessage += '[0] Voltar ao menu anterior'; // A opção "Voltar ao menu anterior" será mostrada apenas no submenu
+    subOptionsMessage += '[0] Voltar ao menu anterior';  // Adicionando a opção de voltar ao menu anterior
     bot.sendMessage(chatId, subOptionsMessage);
 
     // Armazenando a opção do menu anterior
@@ -47,7 +47,7 @@ const isValidType = (type) => {
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Bem-vindo ao atendimento automatizado LLI9!');
-    sendMenu(chatId); // Exibe o menu principal
+    sendMenu(chatId);
 });
 
 bot.onText(/^(\d)$/, (msg, match) => {
@@ -59,17 +59,11 @@ bot.onText(/^(\d)$/, (msg, match) => {
     }
 
     if (option === '0') {  // Se a opção for "Voltar ao menu inicial"
-        if (bot.userState && bot.userState[chatId]) {
-            // Se o usuário estiver em um submenu, voltar para o menu anterior
-            sendSubOptions(chatId, menuOptions.find(item => item.option === bot.userState[chatId].parentOption).subOptions, bot.userState[chatId].parentOption);
-        } else {
-            // Se estiver no menu principal, voltar para o menu inicial
-            sendMenu(chatId);
-        }
+        sendMenu(chatId);  // Envia o menu inicial
         return;
     }
 
-    const selectedOption = menuOptions.find(item => item.option === option);
+    const selectedOption = config.find(item => item.option === option);
 
     if (selectedOption) {
         if (!isValidType(selectedOption.type)) {
@@ -137,19 +131,17 @@ bot.onText(/^(\d)$/, (msg, match) => {
     }
 });
 
-// Lógica para voltar ao menu anterior ou menu inicial
 bot.onText(/^0$/, (msg) => {
     const chatId = msg.chat.id;
     if (bot.userState && bot.userState[chatId]) {
         const parentOption = bot.userState[chatId].parentOption;
-        const selectedOption = menuOptions.find(item => item.option === parentOption);
-
-        // Se estiver em um submenu, volta para o menu do submenu
+        const selectedOption = config.find(item => item.option === parentOption);
         if (selectedOption) {
             sendSubOptions(chatId, selectedOption.subOptions, parentOption);
+        } else {
+            sendMenu(chatId);
         }
     } else {
-        // Se estiver no menu principal, volta para o menu principal
         sendMenu(chatId);
     }
 });
