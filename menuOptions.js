@@ -1,4 +1,4 @@
-module.exports = menuOptions [
+module.exports = [
     { 
         option: '1', 
         text: 'Opção 1', 
