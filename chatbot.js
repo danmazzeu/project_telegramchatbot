@@ -29,7 +29,7 @@ bot.onText(/\/start/, (msg) => {
 });
 
 
-bot.onText(/(1|2|3)/, (msg, match) => {
+bot.onText(/.*/, (msg, match) => {
     const chatId = msg.chat.id;
     const option = match[0];
 
