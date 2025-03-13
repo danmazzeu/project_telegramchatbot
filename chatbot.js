@@ -38,7 +38,7 @@ bot.onText(/.*/, (msg, match) => {
             bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
             break;
         
-        case '1.1': // Exemplo subopções
+        case '1.1': // Exemplo sub opções
             bot.sendMessage(chatId, 'Para abrir uma franquia, entre em contato com nossa equipe de expansão ou visite nosso site para mais informações.');
             break;
         
