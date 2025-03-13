@@ -1,9 +1,8 @@
-require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const menuOptions = require('./config');
 
-const token = process.env.TELEGRAM_BOT_TOKEN;
+const token = 'AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
