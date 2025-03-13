@@ -2,12 +2,12 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const menuOptions = require('./config');
 
-const token = 'SEU_TOKEN_AQUI';
+const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
 
-const userState = {}; // Estado do usuário para armazenar o menu/submenu atual
+const userState = {};
 
 // Exibe o menu principal
 function showMenu(chatId) {
@@ -16,7 +16,7 @@ function showMenu(chatId) {
         menuText += `${option.option} - ${option.text}\n`;
     });
     bot.sendMessage(chatId, menuText);
-    userState[chatId] = { menu: 'main', parent: null }; // Define que o usuário está no menu principal
+    userState[chatId] = { menu: 'main', parent: null };
 }
 
 // Exibe um submenu
@@ -30,7 +30,7 @@ function showSubMenu(chatId, parentOption) {
         subMenuText += `\n0 - Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText);
-        userState[chatId] = { menu: 'submenu', parent: parentOption }; // Define que o usuário está nesse submenu
+        userState[chatId] = { menu: 'submenu', parent: parentOption };
     } else {
         bot.sendMessage(chatId, 'Opção inválida ou sem subopções.');
     }
