@@ -7,7 +7,6 @@ const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
 
-// Função para exibir o menu principal
 function showMenu(chatId) {
     let menuText = 'Escolha uma opção:\n\n';
     menuOptions.forEach(option => {
@@ -16,7 +15,6 @@ function showMenu(chatId) {
     bot.sendMessage(chatId, menuText);
 }
 
-// Função para exibir submenus
 function showSubMenu(chatId, option) {
     const selectedOption = menuOptions.find(item => item.option === option);
     if (selectedOption && selectedOption.subOptions.length > 0) {
@@ -30,7 +28,6 @@ function showSubMenu(chatId, option) {
     }
 }
 
-// Manipula as mensagens recebidas
 bot.on('message', msg => {
     const chatId = msg.chat.id;
     const text = msg.text.trim();
