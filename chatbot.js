@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const menuOptions = require('./config');
 
-const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
+const token = 'SEU_TOKEN_AQUI';
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('Bot iniciado e aguardando mensagens...');
@@ -23,7 +23,7 @@ function showMenu(chatId) {
 function showSubMenu(chatId, parentOption) {
     const selectedOption = menuOptions.find(item => item.option === parentOption);
     if (selectedOption && selectedOption.subOptions.length > 0) {
-        let subMenuText = `${selectedOption.text}\n\nEscolha uma opção:\n`;
+        let subMenuText = `[${selectedOption.option}] ${selectedOption.text}\n\nEscolha uma opção:\n`;
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `[${sub.option}] - ${sub.text}\n`;
         });
@@ -54,7 +54,7 @@ bot.on('message', msg => {
             if (selectedOption.subOptions.length > 0) {
                 showSubMenu(chatId, text);
             } else {
-                bot.sendMessage(chatId, selectedOption.text);
+                bot.sendMessage(chatId, `[${selectedOption.option}] ${selectedOption.text}`);
             }
         } else {
             bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
@@ -68,7 +68,7 @@ bot.on('message', msg => {
                 if (subOption.option === '0') {
                     showMenu(chatId);
                 } else {
-                    bot.sendMessage(chatId, subOption.text);
+                    bot.sendMessage(chatId, `[${subOption.option}] ${subOption.text}`);
                 }
             } else {
                 bot.sendMessage(chatId, 'Opção inválida. Tente novamente.');
