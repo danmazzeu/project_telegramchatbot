@@ -40,6 +40,10 @@ bot.onText(/.*/, (msg, match) => {
     const chatId = msg.chat.id;
     const option = match[0];
 
+    if (msg.text === '/start') {
+        return;
+    }
+
     switch (option) {
         case '1': // Exemplo enviando texto simples
             bot.sendMessage(chatId, 'Você escolheu "Suporte Franquia". Escolha uma sub-opção:\n[1.1] Como abrir uma franquia\n[1.2] Como gerenciar uma franquia\n[1.3] Suporte técnico');
