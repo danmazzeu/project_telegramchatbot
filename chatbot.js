@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const config = require('./config');
+const menuOptions = require('./menuOptions'); // Importando o array de opções do menu
 
 const token = '7750421048:AAE2LBc0gj2dLU3lejkD2LAFAG5pTEDu5RU';
 const bot = new TelegramBot(token, { polling: true });
@@ -18,7 +18,7 @@ app.listen(port, () => {
 // Função para enviar o menu inicial
 const sendMenu = (chatId) => {
     let optionsMessage = 'Escolha uma opção digitando o número correspondente:\n\n';
-    config.forEach(item => {
+    menuOptions.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
     bot.sendMessage(chatId, optionsMessage);
@@ -45,7 +45,7 @@ bot.onText(/\/start/, (msg) => {
     sendMenu(chatId);
 });
 
-bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {
+bot.onText(/^(\d+)$/, (msg, match) => { // Agora captura números de 1 dígito
     const chatId = msg.chat.id;
     const option = match[0];
 
@@ -53,9 +53,10 @@ bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {
         return;
     }
 
-    const selectedOption = config.find(item => item.option === option);
+    const selectedOption = menuOptions.find(item => item.option === option);
 
     if (selectedOption) {
+        // Verificando se o tipo da opção é válido
         if (!isValidType(selectedOption.type)) {
             const errorMessage = `Erro: Tipo de opção inválido para a opção ${selectedOption.option} (${selectedOption.text}).`;
             console.error(errorMessage);
@@ -64,6 +65,7 @@ bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {
             return;
         }
 
+        // Se a opção tiver sub-opções, enviar as sub-opções
         if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
             sendSubOptions(chatId, selectedOption.subOptions);
         } else {
