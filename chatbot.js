@@ -31,7 +31,7 @@ function showSubMenu(chatId, parentOption) {
         selectedOption.subOptions.forEach(sub => {
             subMenuText += `*[${sub.option}]* ${escapeMarkdownV2(sub.text)}\n`;
         });
-        subMenuText += `\n*[0]* Voltar ao menu principal`;
+        subMenuText += `*[0]* Voltar ao menu principal`;
 
         bot.sendMessage(chatId, subMenuText, { parse_mode: 'MarkdownV2' });
         userState[chatId] = { menu: 'submenu', parent: parentOption };
