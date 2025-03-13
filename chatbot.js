@@ -85,7 +85,7 @@ bot.onText(/.*/, (msg, match) => {
             break;
 
         case '7': // Exemplo enviando documento PDF
-            const pdfFilePath = "./assets/documets/test.pdf";
+            const pdfFilePath = "./assets/documents/test.pdf";
             bot.sendDocument(chatId, pdfFilePath).then(() => {
                 bot.sendMessage(chatId, 'Aqui está o documento PDF solicitado!');
             }).catch((err) => {
