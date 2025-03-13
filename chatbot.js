@@ -10,7 +10,7 @@ console.log('Bot iniciado e aguardando mensagens...');
 const userState = {};
 
 function escapeMarkdownV2(text) {
-    return text.replace(/([_*[\]()~`>#+-=|{}.!])/g, '\\$1');
+    return text.replace(/([_*()~`>#+-=|{}.!])/g, '\\$1');
 }
 
 // Exibe o menu principal
