@@ -17,6 +17,7 @@ app.listen(port, () => {
 // Menu inicial
 const sendMenu = (chatId) => {
     const optionsMessage = `Escolha uma opção digitando o número correspondente:
+    
 [1] Suporte Franquia
 [2] Migração Franquia
 [3] Duduzinho fofinho
