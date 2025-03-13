@@ -36,7 +36,7 @@ bot.onText(/\/start/, (msg) => {
     sendMenu(chatId);
 });
 
-bot.onText(/.*/, (msg, match) => {
+bot.onText(/^(\d+(\.\d+)?)$/, (msg, match) => {  // Captura números simples (1, 2, 3...) e sub-opções (1.1, 2.1)
     const chatId = msg.chat.id;
     const option = match[0];
 
