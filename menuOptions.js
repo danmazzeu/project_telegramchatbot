@@ -1,4 +1,4 @@
-const menuOptions = [
+module.exports = [
     { 
         option: '1', 
         text: 'Opção 1', 
@@ -25,5 +25,3 @@ const menuOptions = [
     { option: '7', text: 'Opção documento', type: 'document', fileName: 'test.pdf', subOptions: [] },
     { option: '8', text: 'Opção imagem', type: 'image', fileName: 'test.jpg', subOptions: [] }
 ];
-
-module.exports = menuOptions;
