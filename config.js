@@ -6,8 +6,7 @@ const menuOptions = [
         subOptions: [
             { option: '1', text: 'Como abrir uma franquia', type: 'text' },
             { option: '2', text: 'Como gerenciar uma franquia', type: 'text' },
-            { option: '3', text: 'Suporte técnico', type: 'text' },
-            { option: '0', text: 'Voltar ao menu inicial', type: 'text' }
+            { option: '3', text: 'Suporte técnico', type: 'text' }
         ]
     },
     { 
@@ -16,8 +15,7 @@ const menuOptions = [
         type: 'text', 
         subOptions: [
             { option: '1', text: 'Como migrar uma franquia', type: 'text' },
-            { option: '2', text: 'Suporte para migração', type: 'text' },
-            { option: '0', text: 'Voltar ao menu inicial', type: 'text' }
+            { option: '2', text: 'Suporte para migração', type: 'text' }
         ]
     },
     { option: '3', text: 'Duduzinho fofinho', type: 'text', subOptions: [] },
