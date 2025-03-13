@@ -45,9 +45,9 @@ bot.onText(/\/start/, (msg) => {
     sendMenu(chatId);
 });
 
-bot.onText(/^(\d)$/, (msg, match) => { // Captura apenas números de 1 dígito
+bot.onText(/^(\d)$/, (msg, match) => {
     const chatId = msg.chat.id;
-    const option = match[1]; // Usar match[1] para pegar a opção correta
+    const option = match[1];
 
     if (msg.text === '/start') {
         return;
