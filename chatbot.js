@@ -21,7 +21,7 @@ const sendMenu = (chatId) => {
     menuOptions.forEach(item => {
         optionsMessage += `[${item.option}] ${item.text}\n`;
     });
-    optionsMessage += '[0] Voltar ao menu inicial';  // Adicionando a opção de voltar ao menu inicial
+    optionsMessage += '[0] Voltar ao menu inicial';
     bot.sendMessage(chatId, optionsMessage);
 };
 
@@ -31,7 +31,7 @@ const sendSubOptions = (chatId, subOptions, parentOption) => {
     subOptions.forEach(subItem => {
         subOptionsMessage += `[${subItem.option}] ${subItem.text}\n`;
     });
-    subOptionsMessage += '[0] Voltar ao menu anterior';  // Adicionando a opção de voltar ao menu anterior
+    subOptionsMessage += '[0] Voltar ao menu anterior';
     bot.sendMessage(chatId, subOptionsMessage);
 
     // Armazenando a opção do menu anterior
@@ -53,7 +53,7 @@ bot.onText(/\/start/, (msg) => {
 
 bot.onText(/^(\d)$/, (msg, match) => {
     const chatId = msg.chat.id;
-    const option = match[1]; // Usar match[1] para pegar a opção correta
+    const option = match[1];
 
     if (msg.text === '/start') {
         return;
@@ -132,7 +132,7 @@ bot.onText(/^(\d)$/, (msg, match) => {
     }
 });
 
-bot.onText(/^0$/, (msg) => {  // Se a opção for "0", ou seja, Voltar
+bot.onText(/^0$/, (msg) => {
     const chatId = msg.chat.id;
     if (bot.userState && bot.userState[chatId]) {
         const parentOption = bot.userState[chatId].parentOption;
@@ -140,9 +140,9 @@ bot.onText(/^0$/, (msg) => {  // Se a opção for "0", ou seja, Voltar
         if (selectedOption) {
             sendSubOptions(chatId, selectedOption.subOptions, parentOption);
         } else {
-            sendMenu(chatId);  // Se não houver um submenu anterior, envia o menu inicial
+            sendMenu(chatId);
         }
     } else {
-        sendMenu(chatId);  // Se não houver estado anterior, envia o menu inicial
+        sendMenu(chatId);
     }
 });
